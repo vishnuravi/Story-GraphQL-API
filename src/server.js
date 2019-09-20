@@ -1,3 +1,5 @@
+import "regenerator-runtime/runtime";
+
 import express from "express";
 import mongoose from "mongoose";
 

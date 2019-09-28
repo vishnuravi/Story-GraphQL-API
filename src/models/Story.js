@@ -8,6 +8,10 @@ let storySchema = new Schema({
         type: String,
         required: true
     },
+    symptom: {
+        type: String,
+        required: false
+    },
     text: {
         type: String,
         required: false

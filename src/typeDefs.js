@@ -4,6 +4,7 @@ export const typeDefs = gql`
   type Story {
     _id: ID!
     owner: String!
+    symptom: String
     text: String
   }
   input StoryInput {

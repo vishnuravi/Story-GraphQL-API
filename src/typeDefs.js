@@ -6,11 +6,13 @@ export const typeDefs = gql`
     owner: String!
     symptom: String
     text: String
+    createdDate: String
   }
   input StoryInput {
     owner: String!,
     text: String
   }
+
   type Query {
     stories: [Story]!
     getStory(_id: String): Story

@@ -15,6 +15,10 @@ let storySchema = new Schema({
     text: {
         type: String,
         required: false
+    },
+    createdDate: {
+        type: String,
+        required: false
     }
 })
 

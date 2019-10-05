@@ -52,9 +52,9 @@ export const resolvers = {
     addReviewer: (_, args) => {
       return Story.updateOne(
        { _id: args._id },
-       { $push: { reviewedBy: args.reviewer }}
+       { $addToSet: { reviewedBy: args.reviewer }}
       ).then(result => {
-        return !!result.n;
+        return !!result.nModified;
       }).catch(err =>{
         throw(err);
       })

@@ -8,18 +8,11 @@ let storySchema = new Schema({
         type: String,
         required: true
     },
-    symptom: {
-        type: String,
-        required: false
-    },
-    text: {
-        type: String,
-        required: false
-    },
-    createdDate: {
-        type: String,
-        required: false
-    }
+    symptom: String,
+    text: String,
+    createdDate: Date,
+    timeline: [{ x: String, y: Number }],
+    reviewedBy: [String]
 })
 
 const Story = mongoose.model("Story", storySchema, collection);

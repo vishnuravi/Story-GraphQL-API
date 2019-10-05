@@ -1,6 +1,10 @@
 import Story from "./models/Story";
+import { GraphQLDate, GraphQLTime, GraphQLDateTime } from 'graphql-iso-date';
 
 export const resolvers = {
+  Date: GraphQLDate,
+  Time: GraphQLTime,
+  DateTime: GraphQLDateTime,
   Query: {
     stories: () => {
       return Story.find()
@@ -26,7 +30,9 @@ export const resolvers = {
     createStory: (_, args) => {
       const story = new Story({ 
         owner: args.storyInput.owner, 
-        text: args.storyInput.text 
+        symptom: args.storyInput.symptom,
+        text: args.storyInput.text,
+        createdDate: Date.now()
       });
       return story.save()
       .then(result => {
@@ -42,6 +48,16 @@ export const resolvers = {
       }).catch(err =>{
         throw(err);
       });
+    },
+    addReviewer: (_, args) => {
+      return Story.updateOne(
+       { _id: args._id },
+       { $push: { reviewedBy: args.reviewer }}
+      ).then(result => {
+        return !!result.n;
+      }).catch(err =>{
+        throw(err);
+      })
     }
   }
 };

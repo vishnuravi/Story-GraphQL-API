@@ -6,12 +6,13 @@ export const resolvers = {
   Time: GraphQLTime,
   DateTime: GraphQLDateTime,
   Query: {
-    stories: () => {
-      return Story.find()
+    getStories: (_, args) => {
+      return Story.find().sort( { createdDate: -1 })
         .then(stories => {
           return stories.map(story => {
-            return {...story._doc};
-          })
+            let isReviewed = story._doc.reviewedBy.includes(args.user);
+            return {...story._doc, reviewedByUser: isReviewed};
+          });
         })
           .catch(err => {
             throw err;
@@ -49,7 +50,7 @@ export const resolvers = {
         throw(err);
       });
     },
-    addReviewer: (_, args) => {
+    markStoryReviewed: (_, args) => {
       return Story.updateOne(
        { _id: args._id },
        { $addToSet: { reviewedBy: args.reviewer }}

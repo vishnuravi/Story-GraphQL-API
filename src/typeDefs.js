@@ -10,8 +10,8 @@ export const typeDefs = gql`
     symptom: String
     text: String
     createdDate: DateTime
-    reviewedBy: [String]
     timeline: [Coords]
+    reviewedByUser: Boolean
   }
   type Coords {
     x: String
@@ -23,12 +23,12 @@ export const typeDefs = gql`
     text: String
   }
   type Query {
-    stories: [Story]!
+    getStories(user: String): [Story]
     getStory(_id: String): Story
   }
   type Mutation {
     createStory(storyInput: StoryInput): Story
     deleteStory(_id: String): Boolean
-    addReviewer(_id: String, reviewer: String): Boolean
+    markStoryReviewed(_id: String, reviewer: String): Boolean
   }
 `;

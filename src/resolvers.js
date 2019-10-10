@@ -6,7 +6,7 @@ export const resolvers = {
   Time: GraphQLTime,
   DateTime: GraphQLDateTime,
   Query: {
-    getStories: (_, args) => {
+    getStories: (_, args, { user }) => {
       return Story.find().sort( { createdDate: -1 })
         .then(stories => {
           return stories.map(story => {

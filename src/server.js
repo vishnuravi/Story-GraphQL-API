@@ -7,6 +7,9 @@ import { ApolloServer } from "apollo-server-express";
 import { resolvers } from "./resolvers";
 import { typeDefs } from "./typeDefs";
 
+require('dotenv').config();
+const connectString = process.env.MONGODB_CONNECT_STRING;
+
 // cognito variables
 const userpoolID = "us-east-1_zJq0ibhEs";
 const appClientID = "hpsb1ak8n8qieei3sveaq4075";
@@ -31,8 +34,6 @@ const options = {
 	algorithms: ["RS256"]
 };
 
-const db_name = "storydb";
-
 const run = async () => {
 	const app = express();
 
@@ -56,12 +57,12 @@ const run = async () => {
 
 			// if valid, add user to the context
 			return { user };
-		}
+		},
 	});
 
 	server.applyMiddleware({ app });
 
-	await mongoose.connect(`mongodb://localhost:27017/${db_name}`, {
+	await mongoose.connect(connectString, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true
 	});

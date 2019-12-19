@@ -12,7 +12,8 @@ let storySchema = new Schema({
     text: String,
     createdDate: Date,
     timeline: [{ x: String, y: Number }],
-    reviewedBy: [String]
+    reviewedBy: [String],
+    sharedWith: [String]
 })
 
 const Story = mongoose.model("Story", storySchema, collection);

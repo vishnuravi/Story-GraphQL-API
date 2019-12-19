@@ -58,6 +58,16 @@ export const resolvers = {
         return !!result.nModified;
       }).catch(err =>{
         throw(err);
+      });
+    },
+    shareStory: (_, args) => {
+      return Story.updateOne(
+        { _id: args._id },
+        { $addToSet: { sharedWith: args.clinician }}
+      ).then(result =>{
+        return !!result.nModified;
+      }).catch(err => {
+        throw(err);
       })
     }
   }

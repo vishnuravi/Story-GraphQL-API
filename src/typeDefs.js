@@ -12,6 +12,7 @@ export const typeDefs = gql`
     createdDate: DateTime
     timeline: [Coords]
     reviewedByUser: Boolean
+    sharedWith: [String]
   }
   type Coords {
     x: String
@@ -30,5 +31,6 @@ export const typeDefs = gql`
     createStory(storyInput: StoryInput): Story
     deleteStory(_id: String): Boolean
     markStoryReviewed(_id: String, reviewer: String): Boolean
+    shareStory(_id: String, clinician: String): Boolean
   }
 `;

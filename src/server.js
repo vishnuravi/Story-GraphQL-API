@@ -39,7 +39,8 @@ const run = async () => {
 
 	const server = new ApolloServer({
 		typeDefs,
-		resolvers,
+		resolvers
+		/*
 		context: ({ req }) => {
 			// get user token from header
 			let token = req.headers.authorization;
@@ -57,7 +58,8 @@ const run = async () => {
 
 			// if valid, add user to the context
 			return { user };
-		},
+		
+		}*/,
 	});
 
 	server.applyMiddleware({ app });

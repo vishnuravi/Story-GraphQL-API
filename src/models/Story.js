@@ -4,13 +4,16 @@ const Schema = mongoose.Schema;
 const collection = "stories";
 
 let storySchema = new Schema({
-    owner: {
+    patient: {
         type: String,
         required: true
     },
     symptom: String,
     text: String,
-    createdDate: Date,
+    createdDate: {
+        type: Date,
+        required: true
+    },
     timeline: [{ x: String, y: Number }],
     reviewedBy: [String],
     sharedWith: [String]

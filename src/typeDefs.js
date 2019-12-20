@@ -4,33 +4,39 @@ export const typeDefs = gql`
   scalar Date
   scalar Time
   scalar DateTime
+
   type Story {
     _id: ID!
-    owner: String!
+    patient: String!
     symptom: String
     text: String
     createdDate: DateTime
     timeline: [Coords]
-    reviewedByUser: Boolean
+    reviewedBy: [String]
     sharedWith: [String]
   }
+
   type Coords {
     x: String
     y: Float
   }
+
   input StoryInput {
-    owner: String!
+    patient: String!
     symptom: String
     text: String
   }
+
   type Query {
-    getStories(user: String): [Story]
+    getStoriesByPatient(patient: String): [Story]
+    getStoriesByClinician(clinician: String): [Story]
     getStory(_id: String): Story
   }
+
   type Mutation {
     createStory(storyInput: StoryInput): Story
     deleteStory(_id: String): Boolean
-    markStoryReviewed(_id: String, reviewer: String): Boolean
+    markStoryReviewed(_id: String, clinician: String): Boolean
     shareStory(_id: String, clinician: String): Boolean
   }
 `;

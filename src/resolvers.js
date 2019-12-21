@@ -1,5 +1,6 @@
 import Story from "./models/Story";
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from "graphql-iso-date";
+import { AuthenticationError } from "apollo-server-express";
 
 export const resolvers = {
   Date: GraphQLDate,
@@ -15,16 +16,29 @@ export const resolvers = {
 
     // get all stories created by a patient
     getStoriesByPatient: async (_, args, { user }) => {
-      const stories = await Story.find({ patient: args.patient }).sort({ createdDate: -1 }).exec();
-      return stories;
+      try {
+        const currentUser = await user;
+        const stories = await Story.find({ patient: currentUser.sub })
+          .sort({ createdDate: -1 })
+          .exec();
+        return stories;
+      } catch (e) {
+        throw new AuthenticationError("You must be logged in to do this.");
+      }
     },
 
     // get all stories shared with a clinician
     getStoriesByClinician: async (_, args, { user }) => {
-      const stories = await Story.find({ sharedWith: args.clinician }).sort({ createdDate: -1 }).exec();
-      return stories;
+      try {
+        const currentUser = await user;
+        const stories = await Story.find({ sharedWith: currentUser.sub })
+          .sort({ createdDate: -1 })
+          .exec();
+        return stories;
+      } catch (e) {
+        throw new AuthenticationError("You must be logged in to do this.");
+      }
     }
-
   },
 
   Mutation: {

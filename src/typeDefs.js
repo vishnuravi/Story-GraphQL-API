@@ -28,8 +28,8 @@ export const typeDefs = gql`
   }
 
   type Query {
-    getStoriesByPatient(patient: String): [Story]
-    getStoriesByClinician(clinician: String): [Story]
+    getStoriesByPatient: [Story]
+    getStoriesByClinician: [Story]
     getStory(_id: String): Story
   }
 

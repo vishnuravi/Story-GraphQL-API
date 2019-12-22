@@ -23,7 +23,7 @@ export const resolvers = {
           .exec();
         return stories;
       } catch (e) {
-        throw new AuthenticationError("You must be logged in to do this.");
+        throw new AuthenticationError(e);
       }
     },
 
@@ -36,7 +36,7 @@ export const resolvers = {
           .exec();
         return stories;
       } catch (e) {
-        throw new AuthenticationError("You must be logged in to do this.");
+        throw new AuthenticationError(e);
       }
     }
   },

@@ -12,7 +12,8 @@ const connectString = process.env.MONGODB_CONNECT_STRING;
 
 // cognito variables
 const userpoolID = "us-east-1_zJq0ibhEs";
-const appClientID = "hpsb1ak8n8qieei3sveaq4075";
+const webClientID = "hpsb1ak8n8qieei3sveaq4075";
+const iOSClientID = "36h0h07bo8qa917dndm1ap4j5";
 
 const jwt = require("jsonwebtoken");
 const jwksClient = require("jwks-rsa");
@@ -29,7 +30,7 @@ function getKey(header, cb) {
 }
 
 const options = {
-	audience: `${appClientID}`,
+	audience: [webClientID, iOSClientID],
 	issuer: `https://cognito-idp.us-east-1.amazonaws.com/${userpoolID}`,
 	algorithms: ["RS256"]
 };

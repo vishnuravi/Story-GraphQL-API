@@ -43,7 +43,7 @@ const run = async () => {
 		resolvers,
 		context: ({ req }) => {
 			// get user token from header
-			let token = req.headers.authorization;
+			let token = req.headers.authorization || '';
 			if (token.startsWith("Bearer ")) {
 				token = token.slice(7, token.length).trimLeft();
 			}

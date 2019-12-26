@@ -51,6 +51,7 @@ const run = async () => {
 		typeDefs,
 		resolvers,
 		context: async ({ req }) => {
+
 			// verify token and create user object
 			var user;
 			try {
@@ -62,8 +63,8 @@ const run = async () => {
 			} catch (e){
 				throw new AuthenticationError(e);
 			}
-
-			// if valid, add user to the context
+			
+			// if valid, add user object to the context
 			return { user };
 		
 		},

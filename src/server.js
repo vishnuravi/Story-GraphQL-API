@@ -3,7 +3,7 @@ import "regenerator-runtime/runtime";
 import express from "express";
 import mongoose from "mongoose";
 
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, AuthenticationError } from "apollo-server-express";
 import { resolvers } from "./resolvers";
 import { typeDefs } from "./typeDefs";
 
@@ -29,6 +29,15 @@ function getKey(header, cb) {
 	});
 }
 
+function validateToken(token){
+	return new Promise((resolve, reject) => {
+		jwt.verify(token, getKey, options, (err, decoded) => {
+			if (err) return reject(err);
+			resolve(decoded);
+		});
+	});
+}
+
 const options = {
 	audience: [webClientID, iOSClientID],
 	issuer: `https://cognito-idp.us-east-1.amazonaws.com/${userpoolID}`,
@@ -41,22 +50,20 @@ const run = async () => {
 	const server = new ApolloServer({
 		typeDefs,
 		resolvers,
-		context: ({ req }) => {
-			// get user token from header
-			let token = req.headers.authorization || '';
-			if (token.startsWith("Bearer ")) {
-				token = token.slice(7, token.length).trimLeft();
+		context: async ({ req }) => {
+			// verify token and create user object
+			var user;
+			try {
+				let token = req.headers.authorization || '';
+				if (token.startsWith("Bearer ")) {
+					token = token.slice(7, token.length).trimLeft();
+				}
+				user = await validateToken(token);
+			} catch (e){
+				throw new AuthenticationError(e);
 			}
 
-			// verify user token
-			const user = new Promise((resolve, reject) => {
-				jwt.verify(token, getKey, options, (err, decoded) => {
-					if (err) return reject(err);
-					resolve(decoded);
-				});
-			});
-
-			// if valid, add user to the contex
+			// if valid, add user to the context
 			return { user };
 		
 		},

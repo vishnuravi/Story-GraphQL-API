@@ -16,28 +16,18 @@ export const resolvers = {
 
     // get all stories created by a patient
     getStoriesByPatient: async (_, args, { user }) => {
-      try {
-        const currentUser = await user;
-        const stories = await Story.find({ patient: currentUser.sub })
+        const stories = await Story.find({ patient: user.sub })
           .sort({ createdDate: -1 })
           .exec();
         return stories;
-      } catch (e) {
-        throw new AuthenticationError(e);
-      }
     },
 
     // get all stories shared with a clinician
     getStoriesByClinician: async (_, args, { user }) => {
-      try {
-        const currentUser = await user;
-        const stories = await Story.find({ sharedWith: currentUser.sub })
+        const stories = await Story.find({ sharedWith: user.sub })
           .sort({ createdDate: -1 })
           .exec();
         return stories;
-      } catch (e) {
-        throw new AuthenticationError(e);
-      }
     }
   },
 

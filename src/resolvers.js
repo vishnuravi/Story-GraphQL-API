@@ -1,6 +1,5 @@
 import Story from "./models/Story";
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from "graphql-iso-date";
-import { ForbiddenError } from "apollo-server-express";
 
 export const resolvers = {
 	Date: GraphQLDate,
@@ -16,9 +15,6 @@ export const resolvers = {
 
 		// get all stories created by a patient
 		getStoriesByPatient: async (_, args, { user }) => {
-			if (user['custom:type'] != 'patient') {
-				throw new ForbiddenError('Must be a patient account.')
-			}
 			const stories = await Story.find({ patient: user.sub })
 				.sort({ createdDate: -1 })
 				.exec();
@@ -27,9 +23,6 @@ export const resolvers = {
 
 		// get all stories shared with a clinician
 		getStoriesByClinician: async (_, args, { user }) => {
-			if (user['custom:type'] != 'clinician') {
-				throw new ForbiddenError('Must be a clinician account.')
-			}
 			const stories = await Story.find({ sharedWith: user.sub })
 				.sort({ createdDate: -1 })
 				.exec();
@@ -66,9 +59,6 @@ export const resolvers = {
 		},
 
 		markStoryReviewed: (_, args, { user }) => {
-			if (user['custom:type'] != 'clinician') {
-				throw new AuthenticationError('Must be a clinician account.')
-			}
 			return Story.updateOne(
 				{ _id: args._id },
 				{ $addToSet: { reviewedBy: args.clinician } }
@@ -82,9 +72,6 @@ export const resolvers = {
 		},
 
 		shareStory: (_, args, { user }) => {
-			if (user['custom:type'] != 'patient') {
-				throw new AuthenticationError('Must be a patient account.')
-			}
 			return Story.updateOne(
 				{ _id: args._id },
 				{ $addToSet: { sharedWith: args.clinician } }

@@ -12,12 +12,20 @@ import { validateToken } from "./validator";
 require('dotenv').config();
 const connectString = process.env.MONGODB_CONNECT_STRING;
 
+// import custom schema directives
+const IsPatientDirective = require('./directives/isPatient');
+const IsClinicianDirective = require('./directives/isClinician');
+
 const run = async () => {
 	const app = express();
 
 	const server = new ApolloServer({
 		typeDefs,
 		resolvers,
+		schemaDirectives: {
+			isPatient: IsPatientDirective,
+			isClinician: IsClinicianDirective
+		  },
 		context: async ({ req }) => {
 
 			// verify token and create user object

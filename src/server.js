@@ -17,7 +17,7 @@ const IsPatientDirective = require('./directives/isPatient');
 const IsClinicianDirective = require('./directives/isClinician');
 
 // adddresses Mongoose deprecation warning with findOneAndUpdate()
-//mongoose.set('useFindAndModify', false);
+mongoose.set('useFindAndModify', false);
 
 
 const run = async () => {

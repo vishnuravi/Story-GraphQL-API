@@ -11,36 +11,31 @@ export const resolvers = {
 	Query: {
 		// get a patient by id
 		getPatient: async (_, args) => {
-			const patient = await Patient.findOne({ sub: args.sub }).exec();
-			return patient;
+			return Patient.findOne({ sub: args.sub }).exec();
 		},
 
 		// get a clinician by id
 		getClinician: async (_, args) => {
-			const clinician = await Clinician.findOne({ sub: args.sub }).exec();
-			return clinician;
+			return Clinician.findOne({ sub: args.sub }).exec();
 		},
 
 		// get a story by id
 		getStory: async (_, args) => {
-			const story = await Story.findOne({ _id: args._id }).exec();
-			return story;
+			return Story.findOne({ _id: args._id }).exec();
 		},
 
 		// get all stories created by a patient
 		getStoriesByPatient: async (_, args, { user }) => {
-			const stories = await Story.find({ patient: user.sub })
+			return Story.find({ patient: user.sub })
 				.sort({ createdDate: -1 })
 				.exec();
-			return stories;
 		},
 
 		// get all stories shared with a clinician
 		getStoriesByClinician: async (_, args, { user }) => {
-			const stories = await Story.find({ sharedWith: user.sub })
+			return Story.find({ sharedWith: user.sub })
 				.sort({ createdDate: -1 })
 				.exec();
-			return stories;
 		}
 	},
 
@@ -58,13 +53,12 @@ export const resolvers = {
 				favoriteColor: args.patientInput.favoriteColor,
 				createdDate: Date.now()
 			});
-			const result = await patient.save()
-			return result;
+			return patient.save()
 		},
 
 		// update an existing patient
 		updatePatient: async (_, args) => {
-			const result = await Patient.findOneAndUpdate({ sub: args.patientInput.sub },
+			return Patient.findOneAndUpdate({ sub: args.patientInput.sub },
 				{
 					$set: {
 						sub: args.patientInput.sub,
@@ -81,8 +75,13 @@ export const resolvers = {
 					new: true
 				}
 			);
-			return result;
 
+		},
+
+		// delete a patient
+		deleteStory: async (_, args) => {
+			const result = await Story.deleteOne({ sub: args.sub })
+			return !!result.n;
 		},
 
 		// create a new clinician
@@ -95,13 +94,12 @@ export const resolvers = {
 				createdDate: Date.now()
 			});
 
-			const result = await clinician.save()
-			return result;
+			return clinician.save()
 		},
 
 		// update an existing clinician
 		updateClinician: async (_, args) => {
-			const result = await Clinician.findOneAndUpdate({ sub: args.clinicianInput.sub },
+			return Clinician.findOneAndUpdate({ sub: args.clinicianInput.sub },
 				{
 					$set: {
 						sub: args.clinicianInput.sub,
@@ -113,8 +111,13 @@ export const resolvers = {
 				{
 					new: true
 				});
-			return result;
 
+		},
+
+		// delete a clinician
+		deleteClinician: async (_, args) => {
+			const result = await Clinician.deleteOne({ sub: args.sub })
+			return !!result.n;
 		},
 
 		// create a new story
@@ -125,13 +128,12 @@ export const resolvers = {
 				text: args.storyInput.text,
 				createdDate: Date.now()
 			});
-			const result = await story.save()
-			return result;
+			return story.save()
 		},
 
 		// update an existing story
 		updateStory: async (_, args) => {
-			const result = await Story.findOneAndUpdate({ _id: args._id },
+			return Story.findOneAndUpdate({ _id: args._id },
 				{
 					$set: {
 						patient: args.storyInput.patient,
@@ -143,6 +145,12 @@ export const resolvers = {
 					new: true
 				});
 			return result;
+		},
+
+		// delete a story
+		deleteStory: async (_, args) => {
+			const result = await Story.deleteOne({ _id: args._id })
+			return !!result.n;
 		},
 
 		// delete a story

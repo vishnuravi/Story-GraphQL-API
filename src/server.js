@@ -16,6 +16,10 @@ const connectString = process.env.MONGODB_CONNECT_STRING;
 const IsPatientDirective = require('./directives/isPatient');
 const IsClinicianDirective = require('./directives/isClinician');
 
+// adddresses Mongoose deprecation warning with findOneAndUpdate()
+//mongoose.set('useFindAndModify', false);
+
+
 const run = async () => {
 	const app = express();
 

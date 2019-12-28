@@ -117,57 +117,56 @@ export const resolvers = {
 
 		},
 
-		createStory: (_, args) => {
+		// create a new story
+		createStory: async (_, args) => {
 			const story = new Story({
 				patient: args.storyInput.patient,
 				symptom: args.storyInput.symptom,
 				text: args.storyInput.text,
 				createdDate: Date.now()
 			});
-			return story
-				.save()
-				.then(result => {
-					return { ...result._doc };
-				})
-				.catch(err => {
-					throw err;
-				});
+			const result = await story.save()
+			return result;
 		},
 
-		deleteStory: (_, args) => {
-			return Story.deleteOne({ _id: args._id })
-				.then(result => {
-					return !!result.n;
-				})
-				.catch(err => {
-					throw err;
+		// update an existing story
+		updateStory: async (_, args) => {
+			const result = await Story.findOneAndUpdate({ _id: args._id },
+				{
+					$set: {
+						patient: args.storyInput.patient,
+						symptom: args.storyInput.symptom,
+						text: args.storyInput.text,
+					}
+				},
+				{
+					new: true
 				});
+			return result;
 		},
 
-		markStoryReviewed: (_, args, { user }) => {
-			return Story.updateOne(
+		// delete a story
+		deleteStory: async (_, args) => {
+			const result = await Story.deleteOne({ _id: args._id })
+			return !!result.n;
+		},
+
+		// mark a story reviewed by a clinician
+		markStoryReviewed: async (_, args) => {
+			const result = await Story.updateOne(
 				{ _id: args._id },
 				{ $addToSet: { reviewedBy: args.clinician } }
 			)
-				.then(result => {
-					return !!result.nModified;
-				})
-				.catch(err => {
-					throw err;
-				});
+			return !!result.nModified;
 		},
 
-		shareStory: (_, args, { user }) => {
-			return Story.updateOne(
+		// share a story with a clinician
+		shareStory: async (_, args) => {
+			const result = await Story.updateOne(
 				{ _id: args._id },
 				{ $addToSet: { sharedWith: args.clinician } }
 			)
-				.then(result => {
-					return !!result.nModified;
-				})
-				.catch(err => {
-					throw err;
-				});
+			return !!result.nModified;
 		}
 	}
 };

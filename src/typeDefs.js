@@ -77,7 +77,8 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    createStory(storyInput: StoryInput): Story @isPatient
+	createStory(storyInput: StoryInput): Story @isPatient
+	updateStory(_id: String, storyInput: StoryInput): Story
     deleteStory(_id: String): Boolean @isPatient
     markStoryReviewed(_id: String, clinician: String): Boolean @isClinician
 	shareStory(_id: String, clinician: String): Boolean @isPatient

@@ -35,8 +35,20 @@ export const typeDefs = gql`
 	text: String
 	createdDate: DateTime
 	timeline: [Coords]
-	reviewedBy: [String]
-	sharedWith: [String]
+	reviewedBy: [Review]
+	sharedWith: [Share]
+  }
+
+  type Review {
+	_id: ID!
+	clinician: String
+	date: Date
+  }
+
+  type Share {
+	_id: ID!
+	clinician: String
+	date: Date
   }
 
   type Coords {

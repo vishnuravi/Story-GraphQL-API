@@ -1,4 +1,5 @@
 import Story from "./models/Story";
+import Timeline from "./models/Timeline";
 import Patient from "./models/Patient";
 import Clinician from "./models/Clinician";
 import { GraphQLDate, GraphQLTime, GraphQLDateTime } from "graphql-iso-date";
@@ -33,7 +34,7 @@ export const resolvers = {
 
 		// get all stories shared with a clinician
 		getStoriesByClinician: async (_, args, { user }) => {
-			return Story.find({ sharedWith: user.sub })
+			return Story.find({ sharedWith: { $elemMatch: { clinician: user.sub } } })
 				.sort({ createdDate: -1 })
 				.exec();
 		}
@@ -163,7 +164,7 @@ export const resolvers = {
 		markStoryReviewed: async (_, args) => {
 			const result = await Story.updateOne(
 				{ _id: args._id },
-				{ $addToSet: { reviewedBy: args.clinician } }
+				{ $addToSet: { reviewedBy: { clinician: args.clinician } } }
 			)
 			return !!result.nModified;
 		},
@@ -172,7 +173,7 @@ export const resolvers = {
 		shareStory: async (_, args) => {
 			const result = await Story.updateOne(
 				{ _id: args._id },
-				{ $addToSet: { sharedWith: args.clinician } }
+				{ $addToSet: { sharedWith: { clinician: args.clinician } } }
 			)
 			return !!result.nModified;
 		}

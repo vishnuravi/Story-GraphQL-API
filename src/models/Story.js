@@ -3,12 +3,8 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const collection = "stories";
 
-let timelineSchema = new Schema({
-    timeline: {
-        x: String,
-        y: Number
-    }
-});
+import reviewSchema from "./Review";
+import shareSchema from "./Share";
 
 let storySchema = new Schema({
     patient: {
@@ -41,26 +37,8 @@ let storySchema = new Schema({
         ref: 'Timeline'
     },
     text: String,
-    reviewedBy: [{
-        clinician: {
-            type: String, // user sub
-            required: true
-        },
-        date: {
-            type: Date,
-            default: Date.now
-        } 
-    }],
-    sharedWith: [{
-        clinician: {
-            type: String, // user sub
-            required: true
-        },
-        date: {
-            type: Date,
-            default: Date.now
-        } 
-    }],
+    reviewedBy: [reviewSchema],
+    sharedWith: [shareSchema],
     draft: Boolean,
     createdDate: {
         type: Date,

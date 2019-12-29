@@ -1,28 +1,13 @@
 import mongoose from "mongoose";
+import timelinePointSchema from "./TimelinePoint";
+import symptomSchema from "./Symptom";
 
 const Schema = mongoose.Schema;
 const collection = "timelines";
 
 let timelineSchema = new Schema({
-    symptom: {
-        code: Number,
-        title: String,
-        description: String
-    },
-    points: [{
-        x: {
-            date: {
-                type: Date,
-                required: true
-            },
-            precision: {
-                type: Schema.Types.Mixed,
-                default: 'mm-dd-yyyy'
-            }
-        },
-        y: String,
-        comments: String
-    }]
+    symptom: symptomSchema,
+    points: [timelinePointSchema]
 });
 
 const Timeline = mongoose.model("Timeline", timelineSchema, collection);

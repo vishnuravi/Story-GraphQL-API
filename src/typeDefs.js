@@ -8,57 +8,124 @@ export const typeDefs = gql`
   scalar Time
   scalar DateTime
 
+  enum StoryColor {
+	  teal,
+	  red,
+	  orange,
+	  blue
+  }
+
+  enum Gender {
+	  male,
+	  female,
+	  other,
+	  blank
+  }
+
+  enum Pronouns {
+	  she,
+	  he,
+	  they
+  }
+
+  enum Severity {
+	  mild,
+	  moderate,
+	  severe
+  }
+
   type Patient {
-	_id: String!,
+	id: ID!,
 	sub: String!,
 	firstName: String!,
 	lastName: String!,
 	email: String!,
-	dateOfBirth: String,
-	gender: String,
-	pronouns: String,
-	favoriteColor: String
+	phone: String,
+	dateOfBirth: Date,
+	gender: Gender,
+	pronouns: Pronouns,
+	favoriteColor: StoryColor
   }
 
   type Clinician {
-	_id: String!,
+	id: ID!,
 	sub: String!,
 	firstName: String!,
 	lastName: String!,
-	email: String!
+	email: String!,
+	phone: String,
+	practiceAddress: String,
+	specialty: String,
+	NPI: String
   }
 
   type Story {
-	_id: ID!
-	patient: String!
-	symptom: String
-	text: String
-	createdDate: DateTime
-	timeline: [Coords]
-	reviewedBy: [Review]
-	sharedWith: [Share]
+	id: ID!,
+	patient: Patient!,
+	primarySymptom: Symptom,
+	associatedSymptoms: [Symptom],
+	onset: FuzzyDate,
+	text: String,
+	draft: Boolean,
+	createdDate: DateTime,
+	updatedDate: DateTime,
+	timeline: Timeline,
+	reviewedBy: [Review],
+	sharedWith: [Share],
+	shareCode: [ShareCode]
+  }
+
+  type Timeline {
+	id: ID!,
+	symptom: Symptom,
+	points: [Point],
+	createdDate: DateTime,
+	updatedDate: DateTime
   }
 
   type Review {
-	_id: ID!
-	clinician: String
+	id: ID!,
+	clinician: Clinician,
 	date: Date
   }
 
   type Share {
-	_id: ID!
-	clinician: String
+	_id: ID!,
+	clinician: Clinician,
 	date: Date
   }
 
-  type Coords {
-    x: String
-    y: Float
+  type ShareCode {
+	id: ID!,
+	code: String,
+	creator: Patient,
+	story: Story,
+	created: DateTime
+  }
+
+  type FuzzyDate {
+	id: ID!,
+	date: DateTime,
+	precision: String
+  }
+
+  type Point {
+	id: ID!,
+    x: FuzzyDate,
+	y: Severity,
+	comments: String
+  }
+
+  type Symptom {
+	id: ID!,
+	code: Int,
+	title: String,
+	description: String
   }
 
   input StoryInput {
-    patient: String!
-    symptom: String
+    patientID: String!,
+    symptom: String,
     text: String
   }
 
@@ -81,24 +148,29 @@ export const typeDefs = gql`
   }
 
   type Query {
-	getStoriesByPatient: [Story] @isPatient
-	getStoriesByClinician: [Story] @isClinician
-	getStory(_id: String): Story
-	getPatient(sub: String): Patient
-	getClinician(sub: String): Clinician
+	getStoriesByPatient: [Story] @isPatient,
+	getStoriesByClinician: [Story] @isClinician,
+	getStoryByCode(code: String): Story,
+	story(id: String): Story,
+	patient(id: String): Patient,
+	clinician(sub: String): Clinician
   }
 
   type Mutation {
-	createStory(storyInput: StoryInput): Story @isPatient
-	updateStory(_id: String, storyInput: StoryInput): Story
-	deleteStory(_id: String): Boolean @isPatient
-    markStoryReviewed(_id: String, clinician: String): Boolean @isClinician
-	shareStory(_id: String, clinician: String): Boolean @isPatient
-	createPatient(patientInput: PatientInput): Patient
-	updatePatient(patientInput: PatientInput): Patient
-	deletePatient(sub: String): Boolean
-	createClinician(clinicianInput: ClinicianInput): Clinician
-	updateClinician(clinicianInput: ClinicianInput): Clinician
+	createStory(storyInput: StoryInput): Story @isPatient,
+	updateStory(id: String, storyInput: StoryInput): Story,
+	deleteStory(id: String): Boolean @isPatient,
+    markStoryReviewed(id: String, clinician: String): Boolean @isClinician,
+	shareStory(id: String, clinician: String): Boolean @isPatient,
+	createShareCode(storyID: String): ShareCode
+	createTimeline: Timeline,
+	updateTimeline: Timeline,
+	deleteTimeline: Timeline,
+	createPatient(patientInput: PatientInput): Patient,
+	updatePatient(patientInput: PatientInput): Patient,
+	deletePatient(sub: String): Boolean,
+	createClinician(clinicianInput: ClinicianInput): Clinician,
+	updateClinician(clinicianInput: ClinicianInput): Clinician,
 	deleteClinician(sub: String): Boolean
   }
 `;

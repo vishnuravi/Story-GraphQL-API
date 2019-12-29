@@ -7,7 +7,11 @@ let clinicianSchema = new Schema({
     sub: String,
     firstName: String,
     lastName: String,
-    email: String
+    email: String,
+    phone: String,
+    practiceAddress: String,
+    specialty: String,
+    NPI: String
 })
 
 const Clinician = mongoose.model("Clinician", clinicianSchema, collection);

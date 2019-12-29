@@ -16,7 +16,16 @@ let storySchema = new Schema({
         type: String,
         required: true
     },
-    symptom: String,
+    primarySymptom: {
+       code: Number,
+       title: String,
+       description: String 
+    },
+    associatedSymptoms: [{
+        code: Number,
+        title: String,
+        description: String 
+    }],
     onset: {
         date: {
             type: Date,
@@ -60,7 +69,16 @@ let storySchema = new Schema({
     updatedDate: {
         type: Date,
         default: Date.now
-    }
+    },
+    shareCode: [{
+        code: String,
+        creator: String,
+        story: String,
+        created: {
+            type: Date,
+            default: Date.now
+        }
+    }]
 })
 
 

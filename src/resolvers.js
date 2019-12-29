@@ -9,34 +9,50 @@ export const resolvers = {
 	Time: GraphQLTime,
 	DateTime: GraphQLDateTime,
 
+	Story: {
+		patient: async (parent) => {
+			return Patient.findOne({ sub: parent.patient });
+		} 
+	},
+
+	Review: {
+		clinician: async (parent) => {
+			return Clinician.findOne({ sub: parent.clinician });
+		}
+	},
+
+	Share: {
+		clinician: async (parent) => {
+			return Clinician.findOne({ sub: parent.clinician });
+		}
+	},
+
 	Query: {
 		// get a patient by id
-		getPatient: async (_, args) => {
-			return Patient.findOne({ sub: args.sub }).exec();
+		patient: async (_, args) => {
+			return Patient.findOne({ sub: args.sub });
 		},
 
 		// get a clinician by id
-		getClinician: async (_, args) => {
-			return Clinician.findOne({ sub: args.sub }).exec();
+		clinician: async (_, args) => {
+			return Clinician.findOne({ sub: args.sub });
 		},
 
 		// get a story by id
-		getStory: async (_, args) => {
-			return Story.findOne({ _id: args._id }).exec();
+		story: async (_, args) => {
+			return Story.findOne({ _id: args.id });
 		},
 
 		// get all stories created by a patient
 		getStoriesByPatient: async (_, args, { user }) => {
 			return Story.find({ patient: user.sub })
 				.sort({ createdDate: -1 })
-				.exec();
 		},
 
 		// get all stories shared with a clinician
 		getStoriesByClinician: async (_, args, { user }) => {
 			return Story.find({ sharedWith: { $elemMatch: { clinician: user.sub } } })
 				.sort({ createdDate: -1 })
-				.exec();
 		}
 	},
 
@@ -124,7 +140,7 @@ export const resolvers = {
 		// create a new story
 		createStory: async (_, args) => {
 			const story = new Story({
-				patient: args.storyInput.patient,
+				patient: args.storyInput.patientID,
 				symptom: args.storyInput.symptom,
 				text: args.storyInput.text,
 				createdDate: Date.now()
@@ -134,7 +150,7 @@ export const resolvers = {
 
 		// update an existing story
 		updateStory: async (_, args) => {
-			return Story.findOneAndUpdate({ _id: args._id },
+			return Story.findOneAndUpdate({ _id: args.id },
 				{
 					$set: {
 						patient: args.storyInput.patient,
@@ -150,20 +166,14 @@ export const resolvers = {
 
 		// delete a story
 		deleteStory: async (_, args) => {
-			const result = await Story.deleteOne({ _id: args._id })
-			return !!result.n;
-		},
-
-		// delete a story
-		deleteStory: async (_, args) => {
-			const result = await Story.deleteOne({ _id: args._id })
+			const result = await Story.deleteOne({ _id: args.id })
 			return !!result.n;
 		},
 
 		// mark a story reviewed by a clinician
 		markStoryReviewed: async (_, args) => {
 			const result = await Story.updateOne(
-				{ _id: args._id },
+				{ _id: args.id },
 				{ $addToSet: { reviewedBy: { clinician: args.clinician } } }
 			)
 			return !!result.nModified;
@@ -172,7 +182,7 @@ export const resolvers = {
 		// share a story with a clinician
 		shareStory: async (_, args) => {
 			const result = await Story.updateOne(
-				{ _id: args._id },
+				{ _id: args.id },
 				{ $addToSet: { sharedWith: { clinician: args.clinician } } }
 			)
 			return !!result.nModified;

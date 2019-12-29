@@ -4,10 +4,25 @@ const Schema = mongoose.Schema;
 const collection = "timelines";
 
 let timelineSchema = new Schema({
-    timeline: {
-        x: String,
-        y: Number
-    }
+    symptom: {
+        code: Number,
+        title: String,
+        description: String
+    },
+    points: [{
+        x: {
+            date: {
+                type: Date,
+                required: true
+            },
+            precision: {
+                type: Schema.Types.Mixed,
+                default: 'mm-dd-yyyy'
+            }
+        },
+        y: String,
+        comments: String
+    }]
 });
 
 const Timeline = mongoose.model("Timeline", timelineSchema, collection);

@@ -8,6 +8,7 @@ let patientSchema = new Schema({
     firstName: String,
     lastName: String,
     email: String,
+    phone: String,
     dateOfBirth: Date,
     gender: String,
     pronouns: String,

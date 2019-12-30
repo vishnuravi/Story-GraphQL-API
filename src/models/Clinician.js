@@ -5,6 +5,7 @@ const collection = "clinicians";
 
 let clinicianSchema = new Schema({
     sub: String,
+    title: String,
     firstName: String,
     lastName: String,
     email: String,

@@ -1,18 +1,10 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
+import fuzzyDateSchema from "./FuzzyDate";
 
 let timelinePointSchema = new Schema(
     {
-        x: {
-            date: {
-                type: Date,
-                required: true
-            },
-            precision: {
-                type: Schema.Types.Mixed,
-                default: 'mm-dd-yyyy'
-            }
-        },
+        x: fuzzyDateSchema,
         y: String,
         comments: String
     }

@@ -5,6 +5,7 @@ const collection = "stories";
 
 import reviewSchema from "./Review";
 import shareSchema from "./Share";
+import fuzzyDateSchema from "./FuzzyDate";
 
 let storySchema = new Schema({
     patient: {
@@ -22,16 +23,7 @@ let storySchema = new Schema({
         title: String,
         description: String 
     }],
-    onset: {
-        date: {
-            type: Date,
-            required: true
-        },
-        precision: {
-            type: Schema.Types.Mixed,
-            default: 'mm-dd-yyyy'
-        }
-    },
+    onset: fuzzyDateSchema,
     timeline: {
         type: Schema.Types.ObjectId,
         ref: 'Timeline'

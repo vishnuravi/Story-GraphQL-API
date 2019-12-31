@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 let symptomSchema = new Schema(
     {
-        code: Number,
+        code: [String],
         title: String,
         description: String
     }

@@ -36,24 +36,30 @@ export const typeDefs = gql`
 
   type Patient {
 	id: ID!,
+	active: Boolean,
 	sub: String!,
-	firstName: String!,
-	lastName: String!,
-	email: String!,
+	title: String,
+	firstName: String,
+	lastName: String,
+	email: String,
 	phone: String,
-	dateOfBirth: Date,
+	birthDate: Date,
 	gender: Gender,
 	pronouns: Pronouns,
-	favoriteColor: StoryColor
+	favoriteColor: StoryColor,
+	language: String
   }
 
   type Clinician {
 	id: ID!,
 	sub: String!,
-	firstName: String!,
-	lastName: String!,
-	email: String!,
+	active: Boolean,
+	title: String,
+	firstName: String,
+	lastName: String,
+	email: String,
 	phone: String,
+	gender: Gender,
 	practiceAddress: String,
 	specialty: String,
 	NPI: String
@@ -118,7 +124,7 @@ export const typeDefs = gql`
 
   type Symptom {
 	id: ID!,
-	code: Int,
+	code: [String],
 	title: String,
 	description: String
   }

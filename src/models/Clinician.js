@@ -5,11 +5,13 @@ const collection = "clinicians";
 
 let clinicianSchema = new Schema({
     sub: String,
+    active: Boolean,
     title: String,
     firstName: String,
     lastName: String,
     email: String,
     phone: String,
+    gender: String,
     practiceAddress: String,
     specialty: String,
     NPI: String

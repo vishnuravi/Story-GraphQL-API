@@ -18,7 +18,7 @@
     "express": "^4.17.1",
     "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",
-    "graphql-tools": "^4.0.7",
+    "graphql-tools": "^5.0.0",
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.3",
     "jwks-rsa": "^1.8.0",

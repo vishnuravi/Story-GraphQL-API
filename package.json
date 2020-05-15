@@ -23,7 +23,7 @@
     "jwk-to-pem": "^2.0.3",
     "jwks-rsa": "^1.8.0",
     "mongoose": "^5.9.12",
-    "nodemon": "^2.0.3",
+    "nodemon": "^2.0.4",
     "regenerator-runtime": "^0.13.5"
   },
   "devDependencies": {
